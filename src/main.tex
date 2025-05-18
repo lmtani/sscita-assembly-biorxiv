@@ -73,34 +73,25 @@ Gene models were generated with the FunGAP pipeline, which combines multiple \te
 
 \paragraph{Proteome evaluation.} The translated protein set produced by FunGAP was assessed with \textsc{busco} v5.7.0 in \textbf{protein mode} (\texttt{-m proteins}) against the same \textit{basidiomycota\_odb10} dataset to verify the completeness of conserved fungal orthologues at the annotation level.
 
-% ---------------------------------------------------------------
-\section*{Results}
+ \section*{Results and Discussion}
 
-\subsection*{Sequencing}
+ \subsection*{Sequencing and genome polishing}
 
-Illumina paired-end sequencing produced \textbf{1.59 Gbp} of data (2 x 300 bp), delivering approximately \textbf{80 x} coverage of the \(\sim\)20 Mb genome. Forward (R1) and reverse (R2) reads showed nearly identical quality profiles, with GC content of 53 \% and a sharply peaked read-length distribution at 290-300 bp, indicating tight size selection and minimal fragment degradation.
+Illumina paired--end sequencing generated \textbf{1.59 Gbp} of data (2~x 300 bp), corresponding to roughly \textbf{80x} coverage of the 20Mb genome. Read quality profiles for R1 and R2 were nearly identical, with an average GC content of 53\%, a sharp length distribution (290-300~bp) and minimal adaptor or low--quality sequence removal.
 
-\subsection*{Computational Analysis and Reproducibility}
+Alignment of these reads to the 2015 reference followed by \textsc{DeepVariant} calling introduced \textbf{5,500} single-nucleotide and indel corrections. The resulting polished assembly, \textbf{GCA\_001010845.2}, spans \textbf{20.07Mb} across \textbf{27} contigs and is completely gap-free.
 
-All bioinformatic steps were executed through a portable \texttt{AssemblyPolish.wdl} workflow archived on \href{https://github.com/lmtani/s-scitamineum-pipelines}{\texttt{GitHub}} and supplied as Supplementary File 1.  Input parameters, container images and example data are documented in the repository, enabling easy reproduction of every result reported below.
+\subsection*{Assembly quality compared with public references}
 
-\subsection*{Gene Prediction}
+The new assembly boasts an \textit{N}\textsubscript{90} of \textbf{573kb}, the highest among the six assemblies we benchmarked (Table\ref{table:assembly}). Genome--mode BUSCO v5.7.0 recovered \textbf{98.8~\%} complete orthologues (1,308 of 1,324), surpassing the original 2015 build (96.5~\%) and marginally outscoring the next--best public assembly (98.7~\%). The absence of gaps ensures uninterrupted representation of repeat--rich regions, including the mating--type loci that underpin pathogenicity in smut fungi.
 
-FunGAP annotated \textbf{6 907} protein-coding genes. Mean (median) transcript length was 1 847 bp (1 518 bp); mean (median) CDS length 1 761 bp (1 425 bp), yielding an average protein of 587 amino acids (median 475). Roughly 31 \% of genes (2 155) contained at least one intron (mean intron length 161 bp), for a gene density of 344 per Mb.
+\subsection*{Gene prediction and proteome completeness}
 
-Using 7.76 million mapped RNA-seq reads, FunGAP assembled 10 120 transcript contigs, 5 630 of which exceeded 1 kb, for a total of 15.25 Mbp of expressed sequence.
+FunGAP predicted \textbf{6,907} protein--coding genes with a mean CDS length of 1,761bp (median 1,425bp). Approximately 31~\% of genes contained at least one intron, and the average protein length was 587 amino acids. Proteome--mode BUSCO identified \textbf{99.3~\%} complete conserved orthologues, confirming that nearly the entire fungal gene complement is captured and correctly modelled. This represents a gain of five percentage points over the 2015 annotation.
 
-\paragraph{Proteome completeness.} BUSCO v5.7.0, run in \textbf{protein mode} against the \textit{basidiomycota\_odb10} set, recovered \textbf{99.3 \%} (1 315 / 1 324) complete conserved orthologues, indicating that virtually the entire expected fungal gene complement is represented in the annotation.
+\subsection*{Reproducibility}
 
-% ---------------------------------------------------------------
-
-\section*{Discussion and Conclusions}
-
-The polished assembly presented here (\textbf{GCA001010845.2}) integrates approximately \textbf{5,500} single-nucleotide and indel corrections into the 2015 reference while preserving its streamlined structure of just \textbf{27} contigs that span \textbf{20.07 Mb} with no ambiguous bases (\textbf{55.06 \%} GC; Table \ref{table:assembly}). Its \textit{N}\textsubscript{90} of \textbf{573 kb} is the largest among the six assemblies compared, underscoring long-range contiguity.
-
-Genome-mode BUSCO v5.7.0 detected \textbf{98.8 \%} complete single-copy orthologues (1,308 / 1,324 genes), surpassing the 2015 version (96.5 \%) and marginally outperforming all other public assemblies (98.2-98.7 \%). Fewer contigs and a gap-free consensus yield uninterrupted representations of repeat-rich regions such as the mating-type loci—crucial for understanding pathogenicity in smut fungi. By contrast, the next-best assembly for completeness (GCA000772675.1, 98.7 \%) is fragmented into 69 contigs with residual gaps (0.269 \%), and the most fragmented genome (GCA023212615.1, 371 contigs) shows an \textit{N}\textsubscript{90} twenty-fold smaller.
-
-FunGAP annotation predicted 6,907 protein-coding genes, and BUSCO run in \textbf{protein mode} recovered \textbf{99.3 \%} complete orthologues—an improvement over the 94.2 \% reported for the original annotation—confirming that nearly the entire conserved fungal gene set is now present and correctly modeled.
+Every step of the analysis pipeline—including read mapping, variant calling, consensus generation and benchmarking—is encapsulated in the publicly archived workflow \texttt{AssemblyPolish.wdl}. Container images and parameter files are version--controlled, enabling any researcher to reproduce the results on local hardware or in the cloud. 
 
 \section*{Conclusions}
 
