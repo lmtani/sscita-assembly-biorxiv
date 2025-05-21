@@ -104,7 +104,7 @@ Taken together, these gains in sequence accuracy, contiguity, and gene-space com
   \centering
   \small
   \renewcommand{\arraystretch}{1.25}
-  \begin{tabular}{l c r r r r r}
+  \begin{tabular}{l c r r r r r r}
     \hline\hline
     \column{Assembly} &
     \column{Contigs} &
@@ -112,14 +112,15 @@ Taken together, these gains in sequence accuracy, contiguity, and gene-space com
     \column{\%Gaps} &
     \column{\%GC} &
     \column{N90} &
+    \column{SNV/100kb}
     \column{BUSCO*} \\
     \hline
-    \textbf{GCA001010845.2} & 27  & 20,073,740 & 0.0   & 55.06 &  573,221 & 98.8\% \\
-    GCA001010845.1 & 27  & 20,067,589 & 0.0   & 55.05 &  573,042 & 96.5\% \\
-    GCA928991175.1 & 51  & 20,279,863 & 0.0   & 54.94 &  549,352 & 98.6\% \\
-    GCA000772675.1 & 69  & 19,776,778 & 0.269 & 54.97 &  521,856 & 98.7\% \\
-    GCA900002365.1 & 47  & 19,632,600 & 1.543 & 55.30 &  385,457 & 98.2\% \\
-    GCA023212615.1 & 371 & 19,567,282 & 0.019 & 55.12 &  27,065  & 98.6\% \\
+    \textbf{GCA\_001010845.2} & 27  & 20,073,740 & 0.0   & 55.06 &  573,221 & -    & 98.8\% \\
+    GCA\_001010845.1          & 27  & 20,067,589 & 0.0   & 55.05 &  573,042 & 25.0 & 96.5\% \\
+    GCA\_928991175.1          & 51  & 20,279,863 & 0.0   & 54.94 &  549,352 & 7.0  & 98.6\% \\
+    GCA\_000772675.1          & 69  & 19,776,778 & 0.269 & 54.97 &  521,856 & 59.5 & 98.7\% \\
+    GCA\_900002365.1          & 47  & 19,632,600 & 1.543 & 55.30 &  385,457 & 28.5 & 98.2\% \\
+    GCA\_023212615.1          & 371 & 19,567,282 & 0.019 & 55.12 &  27,065  & 5.0  & 98.6\% \\
     \hline
     \multicolumn{7}{l}{$\ast$ Complete BUSCOs} \\
     \hline\hline
