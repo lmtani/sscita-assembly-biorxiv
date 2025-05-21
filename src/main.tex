@@ -62,33 +62,40 @@ RNA data were obtained from a previous study \cite{sscita2015}, in which haploid
 % ------------------------------------------------------------------
 \subsection*{Polishing}
 
-The original reference genome for \textit{S. scitamineum} (NCBI accession \textbf{GCA\_001010845.1}) \cite{sscita2015} was retrieved from GenBank. Illumina paired-end reads generated in the present study were aligned to this assembly with \textsc{bwa-mem} \cite{bwamem}. Variants were then called using \textsc{DeepVariant} (default parameters) \cite{deepvariant2018}, and the resulting VCF file was applied to the reference with \textsc{bcftools consensus} \cite{samtools} to create a polished FASTA sequence (deposited under accession \textbf{GCA\_001010845.2}).
+The original reference genome for \textit{S. scitamineum} (NCBI accession GCA\_001010845.1) \cite{sscita2015} was retrieved from GenBank. Illumina paired-end reads generated in the present study were aligned to this assembly with \textsc{bwa-mem} \cite{bwamem}. Variants were then called using \textsc{DeepVariant} (default parameters) \cite{deepvariant2018}, and the resulting VCF file was applied to the reference with \textsc{bcftools consensus} \cite{samtools} to create a polished FASTA sequence (deposited under accession GCA\_001010845.3).
 
-\paragraph{Assembly evaluation.} Completeness and basic contiguity statistics were obtained by running \textsc{busco} v5.7.0 \cite{busco} in \textbf{genome mode} (\texttt{-m genome}) with the \textit{basidiomycota\_odb10} lineage dataset and \textsc{AUGUSTUS} as the internal gene predictor. The same BUSCO run and a \textsc{quast} v5.2 analysis (default settings) were applied to five additional publicly available \textit{S. scitamineum} assemblies (GCA001010845.1, GCA928991175.1, GCA000772675.1, GCA900002365.1, and GCA023212615.1) to ensure that all genomes were evaluated under identical conditions. For each assembly, the following metrics were extracted from tool outputs: number of contigs, total assembly length, proportion of ambiguous bases (\% gaps), GC content, and \textit{N}\textsubscript{90}.
+\paragraph{Assembly evaluation.} Completeness and basic contiguity statistics were obtained by running \textsc{busco} v5.7.0 \cite{busco} in genome mode (\texttt{-m genome}) with the \textit{basidiomycota\_odb10} lineage dataset and \textsc{AUGUSTUS} as the internal gene predictor. The same BUSCO run and a \textsc{quast} v5.2 analysis (default settings) were applied to five additional publicly available \textit{S. scitamineum} assemblies (GCA001010845.1, GCA928991175.1, GCA000772675.1, GCA900002365.1, and GCA023212615.1) to ensure that all genomes were evaluated under identical conditions. For each assembly, the following metrics were extracted from tool outputs: number of contigs, total assembly length, proportion of ambiguous bases (\% gaps), GC content, and \textit{N}\textsubscript{90}.
+
+\subsection*{Whole-genome alignment and variant calling}
+
+For each sample, the query assembly was aligned to the resulting reference genome using MUMmer v4.0.0-rc1 (\verb|nucmer|, default parameters), and filtered to retain only one-to-one matches with \verb|delta-filter -1|; the resulting \texttt{*.delta} file was converted to VCF with \verb|delta2vcf|, after which two in-place edits to corrected the genotype field and pruned superfluous FORMAT sub-fields.
 
 % ------------------------------------------------------------------
 \subsection*{Gene Prediction}
 
 Gene models were generated with the FunGAP pipeline, which combines multiple \textit{ab initio} predictors (\textsc{AUGUSTUS}, \textsc{SNAP}, \textsc{GeneMark-ES}) and integrates RNA-seq evidence to refine exon-intron boundaries.
 
-\paragraph{Proteome evaluation.} The translated protein set produced by FunGAP was assessed with \textsc{busco} v5.7.0 in \textbf{protein mode} (\texttt{-m proteins}) against the same \textit{basidiomycota\_odb10} dataset to verify the completeness of conserved fungal orthologues at the annotation level.
+\paragraph{Proteome evaluation.} The translated protein set produced by FunGAP was evaluated with \textsc{busco} v5.7.0 in protein mode (\texttt{-m proteins}) against the same \textit{basidiomycota\_odb10} dataset to verify the completeness of the conserved fungal orthologues at the annotation level.
 
 
  \section*{Results and Discussion}
 
  \subsection*{Sequencing and genome polishing}
 
-Illumina paired--end sequencing generated \textbf{1.59 Gbp} of data (2~x 300 bp), corresponding to roughly \textbf{80x} coverage of the 20Mb genome. Read quality profiles for R1 and R2 were nearly identical, with an average GC content of 53\%, a sharp length distribution (290-300~bp) and minimal adaptor or low--quality sequence removal.
+Illumina paired--end sequencing generated 1.59 Gbp of data (2~x 300 bp), corresponding to roughly 80x coverage of the 20Mb genome. Read quality profiles for R1 and R2 were nearly identical, with an average GC content of 53\%, a sharp length distribution (290-300~bp) and minimal adaptor or low--quality sequence removal.
 
-Alignment of these reads to the 2015 reference followed by \textsc{DeepVariant} calling introduced \textbf{5,500} single-nucleotide and indel corrections. The resulting polished assembly, \textbf{GCA\_001010845.2}, spans \textbf{20.07Mb} across \textbf{27} contigs and is completely gap-free.
+Alignment of these reads to the 2015 reference followed by \textsc{DeepVariant} calling introduced 5,500 single-nucleotide and indel corrections. The resulting polished assembly, GCA\_001010845.3, spans 20.07 Mb across 27 contigs and is completely gap-free.
 
 \subsection*{Assembly quality compared with public references}
 
-The new assembly presented an \textit{N}\textsubscript{90} of \textbf{573kb}, the highest among the six assemblies we benchmarked (Table\ref{table:assembly}). Genome--mode BUSCO v5.7.0 recovered \textbf{98.8~\%} complete orthologues (1,308 of 1,324), surpassing the original 2015 build (96.5~\%) and marginally outscoring the next--best public assembly (98.7~\%). The absence of gaps ensures uninterrupted representation of repeat--rich regions, including the mating--type loci that underpin pathogenicity in smut fungi.
+The new assembly presented an \textit{N}\textsubscript{90} of 573 kb, the highest among the six assemblies we benchmarked (Table\ref{table:assembly}). Genome--mode BUSCO v5.7.0 recovered 98.8~\% complete orthologues (1,308 of 1,324), surpassing the original 2015 build (96.5~\%) and marginally outscoring the next--best public assembly (98.7~\%). The absence of gaps ensures uninterrupted representation of repeat--rich regions, including the mating--type loci that underpin pathogenicity in smut fungi.
+
+\paragraph{Small-variant density.}
+Using the new genome build, GCA\_001010845.3, as the benchmark, we observed that the original 2015 assembly (GCA\_001010845.1) still contains 25.0 single-nucleotide or short-indel differences per 100 kb (Table\ref{table:assembly}), underscoring the magnitude of the corrections introduced during polishing.  Among the other public assemblies, divergence spans an order of magnitude: the assembly GCA\_023212615.1 differs by only 5.0 variants / 100 kb, whereas the older draft GCA\_000772675.1 shows the highest discrepancy at 59.5 variants / 100 kb.  Taken together, these data confirm that assemblies generated without rigorous polishing accumulate substantially more small errors.
 
 \subsection*{Gene prediction and proteome completeness}
 
-FunGAP predicted \textbf{6,907} protein--coding genes with a mean CDS length of 1,761bp (median 1,425bp). Approximately 31~\% of genes contained at least one intron, and the average protein length was 587 amino acids. Proteome--mode BUSCO identified \textbf{99.3~\%} complete conserved orthologues, confirming that nearly the entire fungal gene complement is captured and correctly modelled. This represents a gain of five percentage points over the 2015 annotation.
+FunGAP predicted 6,907 protein--coding genes with a mean CDS length of 1,761bp (median 1,425bp). Approximately 31~\% of genes contained at least one intron, and the average protein length was 587 amino acids. Proteome--mode BUSCO identified 99.3~\% complete conserved orthologues, confirming that nearly the entire fungal gene complement is captured and correctly modelled. This represents a gain of five percentage points over the 2015 annotation.
 
 \subsection*{Reproducibility}
 
@@ -96,10 +103,10 @@ Every step of the analysis pipeline—including read mapping, variant calling, c
 
 \section*{Conclusions}
 
-Taken together, these gains in sequence accuracy, contiguity, and gene-space completeness position \textbf{GCA001010845.2} as the most accurate and comprehensive reference genome available for \textit{S. scitamineum}. This resource will facilitate fine-scale variant discovery, allele-specific expression analyses, and high-resolution comparative genomics across smut fungi, thereby accelerating both basic and applied research on sugarcane smut disease.
+Taken together, these gains in sequence accuracy, contiguity, and gene-space completeness position GCA001010845.3 as the most accurate and comprehensive reference genome available for \textit{S. scitamineum}. This resource will facilitate fine-scale variant discovery, allele-specific expression analyses, and high-resolution comparative genomics across smut fungi, thereby accelerating both basic and applied research on sugarcane smut disease.
 
 \begin{table}
-  \caption{Comparative assembly statistics for the new polished genome (GCA001010845.2) versus five previously published S. scitamineum references}
+  \caption{Comparative assembly statistics for the new polished genome versus five previously published S. scitamineum references}
   \label{table:assembly}
   \centering
   \small
@@ -112,17 +119,18 @@ Taken together, these gains in sequence accuracy, contiguity, and gene-space com
     \column{\%Gaps} &
     \column{\%GC} &
     \column{N90} &
-    \column{SNV/100kb}
-    \column{BUSCO*} \\
+    \column{SNV per 100 kb*} &
+    \column{BUSCO**} \\
     \hline
-    \textbf{GCA\_001010845.2} & 27  & 20,073,740 & 0.0   & 55.06 &  573,221 & -    & 98.8\% \\
+    \textbf{GCA\_001010845.3} & 27  & 20,073,740 & 0.0   & 55.06 &  573,221 & -    & 98.8\% \\
     GCA\_001010845.1          & 27  & 20,067,589 & 0.0   & 55.05 &  573,042 & 25.0 & 96.5\% \\
     GCA\_928991175.1          & 51  & 20,279,863 & 0.0   & 54.94 &  549,352 & 7.0  & 98.6\% \\
     GCA\_000772675.1          & 69  & 19,776,778 & 0.269 & 54.97 &  521,856 & 59.5 & 98.7\% \\
     GCA\_900002365.1          & 47  & 19,632,600 & 1.543 & 55.30 &  385,457 & 28.5 & 98.2\% \\
     GCA\_023212615.1          & 371 & 19,567,282 & 0.019 & 55.12 &  27,065  & 5.0  & 98.6\% \\
     \hline
-    \multicolumn{7}{l}{$\ast$ Complete BUSCOs} \\
+    \multicolumn{8}{l}{$\ast$ Median of small variants per 100 kb using GCA\_001010845.3 as reference} \\
+    \multicolumn{8}{l}{$\ast$$\ast$ Complete BUSCOs detected in genome mode} \\
     \hline\hline
   \end{tabular}
   \normalsize
