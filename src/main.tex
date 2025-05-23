@@ -12,7 +12,6 @@
 \usepackage{newtxtext,newtxmath}
 \usepackage[colorlinks=true,citecolor=red,linkcolor=black]{hyperref}
 
-
 % Please add the first author's last name here for the footer:
 \NameTag{Taniguti, \today}
 
@@ -21,133 +20,301 @@
 \begin{document}
 
 % You will need to make the title all-caps
-\title{Updated chromosome-level genome assembly of \textit{Sporisorium scitamineum} with improved accuracy and completeness}
+\title{Updated chromosome-level genome assembly of
+\textit{Sporisorium scitamineum} with improved accuracy and completeness}
 
 \author[1]{Lucas M. Taniguti}
 \author[2]{Pedro F. Vilanova}
 \author[1]{João P. Kitajima}
 \author[2]{Claudia B. Monteiro-Vitorello }
 
-\affil[1]{Mendelics, Av. Braz Leme 1631, Casa Verde, 02511-000, São Paulo, SP, Brazil }
-\affil[2]{University of São Paulo, College of Agriculture Luiz de Queiroz, Department of Genetics, Av. Pádua Dias 11, 13400-970, Piracicaba, SP, Brazil}
+\affil[1]{Mendelics, Av. Braz Leme 1631, Casa Verde, 02511-000, São
+Paulo, SP, Brazil }
+\affil[2]{University of São Paulo, College of Agriculture Luiz de
+  Queiroz, Department of Genetics, Av. Pádua Dias 11, 13400-970,
+Piracicaba, SP, Brazil}
 
 \maketitle
 
 \begin{abstract}
-  In 2015, we published the complete genome assembly of \textit{Sporisorium scitamineum}, the fungal pathogen responsible for sugarcane smut disease, generated primarily from PacBio long-read sequencing and polished with Illumina short reads. Since then, the tools for genome assembly have improved considerably, including advances in sequencing technologies and bioinformatics workflows, motivating us to revisit our original assembly. Here, we present an updated genome version, re-polished using newly generated high-quality Illumina short-read data and state-of-the-art variant-calling workflows, resulting in corrections at approximately 5,500 genomic positions, predominantly correcting SNP and indel errors. BUSCO benchmarking in protein mode demonstrated increased genome completeness from the original 94.2\% to 99.3\%, indicating substantial improvements in both accuracy and gene annotation reliability. This enhanced genome assembly provides a significantly improved reference resource, enabling more robust genetic, evolutionary, and functional studies of this economically important sugarcane pathogen.
+  In 2015, we published the complete genome assembly of
+  \textit{Sporisorium scitamineum}, the fungal pathogen responsible
+  for sugarcane smut disease, generated primarily from PacBio
+  long-read sequencing and polished with Illumina short reads. Since
+  then, the tools for genome assembly have improved considerably,
+  including advances in sequencing technologies and bioinformatics
+  workflows, motivating us to revisit our original assembly. Here, we
+  present an updated genome version, re-polished using newly
+  generated high-quality Illumina short-read data and
+  state-of-the-art variant-calling workflows, resulting in
+  corrections at approximately 5,500 genomic positions, predominantly
+  correcting SNP and indel errors. BUSCO benchmarking in protein mode
+  demonstrated increased genome completeness from the original 94.2\%
+  to 99.3\%, indicating substantial improvements in both accuracy and
+  gene annotation reliability. This enhanced genome assembly provides
+  a significantly improved reference resource, enabling more robust
+  genetic, evolutionary, and functional studies of this economically
+  important sugarcane pathogen.
 \end{abstract}
 
 \section*{Introduction}
 
-Genome assembly involves organizing sequencing reads into a contiguous representation of an organism's chromosomes by aligning and merging data from various sequencing platforms \cite{BASANTANI201733,Baker2012}. Currently, sequencing technologies differ notably in read length, accuracy, and cost. Short-read platforms, such as Illumina and MGI, provide accurate yet shorter reads \cite{giab014}, whereas long-read platforms like PacBio and Nanopore generate reads spanning thousands of base pairs but with higher raw error rates \cite{Jain2018,Karst2021}. Hybrid assembly approaches leverage the strengths of different sequencing technologies, mitigating their individual limitations to enhance assembly accuracy \cite{Chen2020}.
+Genome assembly involves organizing sequencing reads into a
+contiguous representation of an organism's chromosomes by aligning
+and merging data from various sequencing platforms
+\cite{BASANTANI201733,Baker2012}. Currently, sequencing technologies
+differ notably in read length, accuracy, and cost. Short-read
+platforms, such as Illumina and MGI, provide accurate yet shorter
+reads \cite{giab014}, whereas long-read platforms like PacBio and
+Nanopore generate reads spanning thousands of base pairs but with
+higher raw error rates \cite{Jain2018,Karst2021}. Hybrid assembly
+approaches leverage the strengths of different sequencing
+technologies, mitigating their individual limitations to enhance
+assembly accuracy \cite{Chen2020}.
 
-\textit{Sporisorium scitamineum} causes sugarcane smut disease, significantly reducing crop yield worldwide. Plants infected by this fungus typically show severe growth impairment, with reported yield losses ranging from 12\% to as high as 75\% \cite{Rajput2024}. Understanding the genome of this pathogen may reveal essential information on virulence, effector candidates, and host adaptation, guiding breeding for resistance and improving disease control strategies. Our initial genome assembly of \textit{Sporisorium scitamineum}, published in 2015 \cite{sscita2015}, utilized PacBio long-read sequencing and Illumina short-read polishing. However, despite this hybrid approach, residual errors remained, potentially limiting downstream genetic and functional analyses.
+\textit{Sporisorium scitamineum} causes sugarcane smut disease,
+significantly reducing crop yield worldwide. Plants infected by this
+fungus typically show severe growth impairment, with reported yield
+losses ranging from 12\% to as high as 75\% \cite{Rajput2024}.
+Understanding the genome of this pathogen may reveal essential
+information on virulence, effector candidates, and host adaptation,
+guiding breeding for resistance and improving disease control
+strategies. Our initial genome assembly of \textit{Sporisorium
+scitamineum}, published in 2015 \cite{sscita2015}, utilized PacBio
+long-read sequencing and Illumina short-read polishing. However,
+despite this hybrid approach, residual errors remained, potentially
+limiting downstream genetic and functional analyses.
 
-Recent advancements in sequencing technologies and computational methods now allow for improved accuracy and completeness of genome assemblies. Short-read sequencing data from newer Illumina platforms, combined with variant-calling methods such as DeepVariant \cite{deepvariant2018}, can identify and correct errors in reference assemblies, leading to a refined consensus sequence. Additionally, more comprehensive gene prediction pipelines like FunGAP \cite{fungap} integrate multiple gene prediction tools along with RNA sequencing (RNA-seq) data, improving on our previous approach that relied solely on Augustus \cite{augustus2006}.
+Recent advancements in sequencing technologies and computational
+methods now allow for improved accuracy and completeness of genome
+assemblies. Short-read sequencing data from newer Illumina platforms,
+combined with variant-calling methods such as DeepVariant
+\cite{deepvariant2018}, can identify and correct errors in reference
+assemblies, leading to a refined consensus sequence. Additionally,
+more comprehensive gene prediction pipelines like FunGAP
+\cite{fungap} integrate multiple gene prediction tools along with RNA
+sequencing (RNA-seq) data, improving on our previous approach that
+relied solely on Augustus \cite{augustus2006}.
 
-Recognizing these technological advances, we revisited our original \textit{S. scitamineum} genome assembly. Here, we report an updated genome assembly obtained by polishing the original genome with newly generated Illumina sequencing data, variant calling, and consensus refinement techniques. We also improved gene prediction by utilizing the more complete FunGAP pipeline, incorporating existing RNA-seq data. The resulting genome resource represents an advancement, facilitating more accurate genetic, evolutionary, and functional studies of this pathogen.
+Recognizing these technological advances, we revisited our original
+\textit{S. scitamineum} genome assembly. Here, we report an updated
+genome assembly obtained by polishing the original genome with newly
+generated Illumina sequencing data, variant calling, and consensus
+refinement techniques. We also improved gene prediction by utilizing
+the more complete FunGAP pipeline, incorporating existing RNA-seq
+data. The resulting genome resource represents an advancement,
+facilitating more accurate genetic, evolutionary, and functional
+studies of this pathogen.
 
 \section*{Methods}
 
 \subsection*{DNA Extraction, Library Preparation, and Sequencing}
 
-Fungal cells from MAT-1 haploid yeast-like cells derived from SSC39 teliospores were grown in a liquid medium YM (3 g L\textsuperscript{-1} yeast extract, 3 g L\textsuperscript{-1} malt extract, 5 g L\textsuperscript{-1} peptone, 10 g L\textsuperscript{-1} glucose) at 28~$^{\circ}$C. with shaking at 200 rpm. Genomic DNA was extracted with a modified Doyle and Doyle protocol \cite{Doyle1987} to meet sequencing quality standards.
+Fungal cells from MAT-1 haploid yeast-like cells derived from SSC39
+teliospores were grown in a liquid medium YM (3 g
+  L\textsuperscript{-1} yeast extract, 3 g L\textsuperscript{-1} malt
+  extract, 5 g L\textsuperscript{-1} peptone, 10 g
+L\textsuperscript{-1} glucose) at 28~$^{\circ}$C. with shaking at 200
+rpm. Genomic DNA was extracted with a modified Doyle and Doyle
+protocol \cite{Doyle1987} to meet sequencing quality standards.
 
-The library preparation was then performed using the DNA Prep Kit (Illumina, San Diego, CA, USA). The resulting library was sequenced on a NextSeq 2000 System in 2 $\times$ 300 bp paired-end runs at the Functional Genomics Center, ESALQ, University of São Paulo, Piracicaba, Brazil.
+The library preparation was then performed using the DNA Prep Kit
+(Illumina, San Diego, CA, USA). The resulting library was sequenced
+on a NextSeq 2000 System in 2 $\times$ 300 bp paired-end runs at the
+Functional Genomics Center, ESALQ, University of São Paulo, Piracicaba, Brazil.
 
 \subsection*{RNA data}
 
-RNA data were obtained from a previous study \cite{sscita2015}, in which haploid yeast-like cells of opposite mating types were grown separately in a liquid medium for 15~h at 28~$^{\circ}$C under constant shaking. The cells were then mixed before RNA extraction, flash-frozen in liquid nitrogen, and stored at -80~$^{\circ}$C until use. Paired-end sequencing was performed on the Illumina HiScanSQ platform.
+RNA data were obtained from a previous study \cite{sscita2015}, in
+which haploid yeast-like cells of opposite mating types were grown
+separately in a liquid medium for 15~h at 28~$^{\circ}$C under
+constant shaking. The cells were then mixed before RNA extraction,
+flash-frozen in liquid nitrogen, and stored at -80~$^{\circ}$C until
+use. Paired-end sequencing was performed on the Illumina HiScanSQ platform.
 
 % ------------------------------------------------------------------
 \subsection*{Polishing}
 
-The original reference genome for \textit{S. scitamineum} (NCBI accession GCA\_001010845.1) \cite{sscita2015} was retrieved from GenBank. Illumina paired-end reads generated in the present study were aligned to this assembly with \textsc{bwa-mem} \cite{bwamem}. Variants were then called using \textsc{DeepVariant} (default parameters) \cite{deepvariant2018}, and the resulting VCF file was applied to the reference with \textsc{bcftools consensus} \cite{samtools} to create a polished FASTA sequence (deposited under accession GCA\_001010845.3).
+The original reference genome for \textit{S. scitamineum} (NCBI
+accession GCA\_001010845.1) \cite{sscita2015} was retrieved from
+GenBank. Illumina paired-end reads generated in the present study
+were aligned to this assembly with \textsc{bwa-mem} \cite{bwamem}.
+Variants were then called using \textsc{DeepVariant} (default
+parameters) \cite{deepvariant2018}, and the resulting VCF file was
+applied to the reference with \textsc{bcftools consensus}
+\cite{samtools} to create a polished FASTA sequence (deposited under
+accession GCA\_001010845.3).
 
-\paragraph{Assembly evaluation.} Completeness and basic contiguity statistics were obtained by running \textsc{busco} v5.7.0 \cite{busco} in genome mode (\texttt{-m genome}) with the \textit{basidiomycota\_odb10} lineage dataset and \textsc{AUGUSTUS} as the internal gene predictor. The same BUSCO run and a \textsc{quast} v5.2 analysis (default settings) were applied to five additional publicly available \textit{S. scitamineum} assemblies (GCA001010845.1, GCA928991175.1, GCA000772675.1, GCA900002365.1, and GCA023212615.1) to ensure that all genomes were evaluated under identical conditions. For each assembly, the following metrics were extracted from tool outputs: number of contigs, total assembly length, proportion of ambiguous bases (\% gaps), GC content, and \textit{N}\textsubscript{90}.
+\paragraph{Assembly evaluation.} Completeness and basic contiguity
+statistics were obtained by running \textsc{busco} v5.7.0
+\cite{busco} in genome mode (\texttt{-m genome}) with the
+\textit{basidiomycota\_odb10} lineage dataset and \textsc{AUGUSTUS}
+as the internal gene predictor. The same BUSCO run and a
+\textsc{quast} v5.2 analysis (default settings) were applied to five
+additional publicly available \textit{S. scitamineum} assemblies
+(GCA001010845.1, GCA928991175.1, GCA000772675.1, GCA900002365.1, and
+GCA023212615.1) to ensure that all genomes were evaluated under
+identical conditions. For each assembly, the following metrics were
+extracted from tool outputs: number of contigs, total assembly
+length, proportion of ambiguous bases (\% gaps), GC content, and
+\textit{N}\textsubscript{90}.
 
 \subsection*{Whole-genome alignment and variant calling}
 
-For each sample, the query assembly was aligned to the resulting reference genome using MUMmer v4.0.0-rc1 (\verb|nucmer|, default parameters), and filtered to retain only one-to-one matches with \verb|delta-filter -1|; the resulting \texttt{*.delta} file was converted to VCF with \verb|delta2vcf|, after which two in-place edits to corrected the genotype field and pruned superfluous FORMAT sub-fields.
+For each sample, the query assembly was aligned to the resulting
+reference genome using MUMmer v4.0.0-rc1 (\verb|nucmer|, default
+parameters), and filtered to retain only one-to-one matches with
+\verb|delta-filter -1|; the resulting \texttt{*.delta} file was
+converted to VCF with \verb|delta2vcf|, after which two in-place
+edits to corrected the genotype field and pruned superfluous FORMAT sub-fields.
 
 % ------------------------------------------------------------------
 \subsection*{Gene Prediction}
 
-Gene models were generated with the FunGAP pipeline, which combines multiple \textit{ab initio} predictors (\textsc{AUGUSTUS}, \textsc{SNAP}, \textsc{GeneMark-ES}) and integrates RNA-seq evidence to refine exon-intron boundaries.
+Gene models were generated with the FunGAP pipeline, which combines
+multiple \textit{ab initio} predictors (\textsc{AUGUSTUS},
+\textsc{SNAP}, \textsc{GeneMark-ES}) and integrates RNA-seq evidence
+to refine exon-intron boundaries.
 
-\paragraph{Proteome evaluation.} The translated protein set produced by FunGAP was evaluated with \textsc{busco} v5.7.0 in protein mode (\texttt{-m proteins}) against the same \textit{basidiomycota\_odb10} dataset to verify the completeness of the conserved fungal orthologues at the annotation level.
+\paragraph{Proteome evaluation.} The translated protein set produced
+by FunGAP was evaluated with \textsc{busco} v5.7.0 in protein mode
+(\texttt{-m proteins}) against the same \textit{basidiomycota\_odb10}
+dataset to verify the completeness of the conserved fungal
+orthologues at the annotation level.
 
+\section*{Results and Discussion}
 
- \section*{Results and Discussion}
+\subsection*{Sequencing and genome polishing}
 
- \subsection*{Sequencing and genome polishing}
+Illumina paired--end sequencing generated 1.59 Gbp of data (2~x 300
+bp), corresponding to roughly 80x coverage of the 20Mb genome. Read
+quality profiles for R1 and R2 were nearly identical, with an average
+GC content of 53\%, a sharp length distribution (290-300~bp) and
+minimal adaptor or low--quality sequence removal.
 
-Illumina paired--end sequencing generated 1.59 Gbp of data (2~x 300 bp), corresponding to roughly 80x coverage of the 20Mb genome. Read quality profiles for R1 and R2 were nearly identical, with an average GC content of 53\%, a sharp length distribution (290-300~bp) and minimal adaptor or low--quality sequence removal.
-
-Alignment of these reads to the 2015 reference followed by \textsc{DeepVariant} calling introduced 5,500 single-nucleotide and indel corrections. The resulting polished assembly, GCA\_001010845.3, spans 20.07 Mb across 27 contigs and is completely gap-free.
+Alignment of these reads to the 2015 reference followed by
+\textsc{DeepVariant} calling introduced 5,500 single-nucleotide and
+indel corrections. The resulting polished assembly, GCA\_001010845.3,
+spans 20.07 Mb across 27 contigs and is completely gap-free.
 
 \subsection*{Assembly quality compared with public references}
 
-The new assembly presented an \textit{N}\textsubscript{90} of 573 kb, the highest among the six assemblies we benchmarked (Table\ref{table:assembly}). Genome--mode BUSCO v5.7.0 recovered 98.8~\% complete orthologues (1,308 of 1,324), surpassing the original 2015 build (96.5~\%) and marginally outscoring the next--best public assembly (98.7~\%). The absence of gaps ensures uninterrupted representation of repeat--rich regions, including the mating--type loci that underpin pathogenicity in smut fungi.
+The new assembly presented an \textit{N}\textsubscript{90} of 573 kb,
+the highest among the six assemblies we benchmarked
+(Table\ref{table:assembly}). Genome--mode BUSCO v5.7.0 recovered
+98.8~\% complete orthologues (1,308 of 1,324), surpassing the
+original 2015 build (96.5~\%) and marginally outscoring the
+next--best public assembly (98.7~\%). The absence of gaps ensures
+uninterrupted representation of repeat--rich regions, including the
+mating--type loci that underpin pathogenicity in smut fungi.
 
 \paragraph{Small-variant density.}
-Using the new genome build, GCA\_001010845.3, as the benchmark, we observed that the original 2015 assembly (GCA\_001010845.1) still contains 25.0 single-nucleotide or short-indel differences per 100 kb (Table\ref{table:assembly}), underscoring the magnitude of the corrections introduced during polishing.  Among the other public assemblies, divergence spans an order of magnitude: the assembly GCA\_023212615.1 differs by only 5.0 variants / 100 kb, whereas the older draft GCA\_000772675.1 shows the highest discrepancy at 59.5 variants / 100 kb.  Taken together, these data confirm that assemblies generated without rigorous polishing accumulate substantially more small errors.
+Using the new genome build, GCA\_001010845.3, as the benchmark, we
+observed that the original 2015 assembly (GCA\_001010845.1) still
+contains 25.0 single-nucleotide or short-indel differences per 100 kb
+(Table\ref{table:assembly}), underscoring the magnitude of the
+corrections introduced during polishing.  Among the other public
+assemblies, divergence spans an order of magnitude: the assembly
+GCA\_023212615.1 differs by only 5.0 variants / 100 kb, whereas the
+older draft GCA\_000772675.1 shows the highest discrepancy at 59.5
+variants / 100 kb.  Taken together, these data confirm that
+assemblies generated without rigorous polishing accumulate
+substantially more small errors.
 
 \subsection*{Gene prediction and proteome completeness}
 
-FunGAP predicted 6,907 protein--coding genes with a mean CDS length of 1,761bp (median 1,425bp). Approximately 31~\% of genes contained at least one intron, and the average protein length was 587 amino acids. Proteome--mode BUSCO identified 99.3~\% complete conserved orthologues, confirming that nearly the entire fungal gene complement is captured and correctly modelled. This represents a gain of five percentage points over the 2015 annotation.
+FunGAP predicted 6,907 protein--coding genes with a mean CDS length
+of 1,761bp (median 1,425bp). Approximately 31~\% of genes contained
+at least one intron, and the average protein length was 587 amino
+acids. Proteome--mode BUSCO identified 99.3~\% complete conserved
+orthologues, confirming that nearly the entire fungal gene complement
+is captured and correctly modelled. This represents a gain of five
+percentage points over the 2015 annotation.
 
 \subsection*{Reproducibility}
 
-Every step of the analysis pipeline—including read mapping, variant calling, consensus generation and benchmarking—is encapsulated in the publicly archived workflow \texttt{AssemblyPolish.wdl}. Container images and parameter files are version--controlled, enabling any researcher to reproduce the results on local hardware or in the cloud. 
+Every step of the analysis pipeline—including read mapping, variant
+calling, consensus generation and benchmarking—is encapsulated in the
+publicly archived workflow \texttt{AssemblyPolish.wdl}. Container
+images and parameter files are version--controlled, enabling any
+researcher to reproduce the results on local hardware or in the cloud.
 
 \section*{Conclusions}
 
-Taken together, these gains in sequence accuracy, contiguity, and gene-space completeness position GCA001010845.3 as the most accurate and comprehensive reference genome available for \textit{S. scitamineum}. This resource will facilitate fine-scale variant discovery, allele-specific expression analyses, and high-resolution comparative genomics across smut fungi, thereby accelerating both basic and applied research on sugarcane smut disease.
+Taken together, these gains in sequence accuracy, contiguity, and
+gene-space completeness position GCA001010845.3 as the most accurate
+and comprehensive reference genome available for \textit{S.
+scitamineum}. This resource will facilitate fine-scale variant
+discovery, allele-specific expression analyses, and high-resolution
+comparative genomics across smut fungi, thereby accelerating both
+basic and applied research on sugarcane smut disease.
 
 \begin{table}
-  \caption{Comparative assembly statistics for the new polished genome versus five previously published S. scitamineum references}
-  \label{table:assembly}
-  \centering
-  \small
-  \renewcommand{\arraystretch}{1.25}
-  \begin{tabular}{l c r r r r r r}
-    \hline\hline
-    \column{Assembly} &
-    \column{Contigs} &
-    \column{Total size} &
-    \column{\%Gaps} &
-    \column{\%GC} &
-    \column{N90} &
-    \column{SNV per 100 kb*} &
-    \column{BUSCO**} \\
-    \hline
-    \textbf{GCA\_001010845.3} & 27  & 20,073,740 & 0.0   & 55.06 &  573,221 & -    & 98.8\% \\
-    GCA\_001010845.1          & 27  & 20,067,589 & 0.0   & 55.05 &  573,042 & 25.0 & 96.5\% \\
-    GCA\_928991175.1          & 51  & 20,279,863 & 0.0   & 54.94 &  549,352 & 7.0  & 98.6\% \\
-    GCA\_000772675.1          & 69  & 19,776,778 & 0.269 & 54.97 &  521,856 & 59.5 & 98.7\% \\
-    GCA\_900002365.1          & 47  & 19,632,600 & 1.543 & 55.30 &  385,457 & 28.5 & 98.2\% \\
-    GCA\_023212615.1          & 371 & 19,567,282 & 0.019 & 55.12 &  27,065  & 5.0  & 98.6\% \\
-    \hline
-    \multicolumn{8}{l}{$\ast$ Median of small variants per 100 kb using GCA\_001010845.3 as reference} \\
-    \multicolumn{8}{l}{$\ast$$\ast$ Complete BUSCOs detected in genome mode} \\
-    \hline\hline
-  \end{tabular}
-  \normalsize
+\caption{Comparative assembly statistics for the new polished genome
+versus five previously published S. scitamineum references}
+\label{table:assembly}
+\centering
+\small
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{l c r r r r r r}
+  \hline\hline
+  \column{Assembly} &
+  \column{Contigs} &
+  \column{Total size} &
+  \column{\%Gaps} &
+  \column{\%GC} &
+  \column{N90} &
+  \column{SNV per 100 kb*} &
+  \column{BUSCO**} \\
+  \hline
+  \textbf{GCA\_001010845.3} & 27  & 20,073,740 & 0.0   & 55.06 &
+  573,221 & -    & 98.8\% \\
+  GCA\_001010845.1          & 27  & 20,067,589 & 0.0   & 55.05 &
+  573,042 & 25.0 & 96.5\% \\
+  GCA\_928991175.1          & 51  & 20,279,863 & 0.0   & 54.94 &
+  549,352 & 7.0  & 98.6\% \\
+  GCA\_000772675.1          & 69  & 19,776,778 & 0.269 & 54.97 &
+  521,856 & 59.5 & 98.7\% \\
+  GCA\_900002365.1          & 47  & 19,632,600 & 1.543 & 55.30 &
+  385,457 & 28.5 & 98.2\% \\
+  GCA\_023212615.1          & 371 & 19,567,282 & 0.019 & 55.12 &
+  27,065  & 5.0  & 98.6\% \\
+  \hline
+  \multicolumn{8}{l}{$\ast$ Median of small variants per 100 kb using
+  GCA\_001010845.3 as reference} \\
+  \multicolumn{8}{l}{$\ast$$\ast$ Complete BUSCOs detected in genome mode} \\
+  \hline\hline
+\end{tabular}
+\normalsize
 \end{table}
 
 \section*{Data Availability}
 
-The polished \textit{Sporisorium scitamineum} genome generated in this study is publicly available in the NCBI Nucleotide database under chromosome-level accessions CP010913.2-CP010939.2 (assembly accession \href{https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_001010845}{\texttt{GCA\_001010845}}).
+The polished \textit{Sporisorium scitamineum} genome generated in
+this study is publicly available in the NCBI Nucleotide database
+under chromosome-level accessions CP010913.2-CP010939.2 (assembly
+accession
+\href{https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_001010845}{\texttt{GCA\_001010845}}).
 
-To maximize reproducibility and make the new gene predictions accessible, we provide the following items as supplementary material.
+To maximize reproducibility and make the new gene predictions
+accessible, we provide the following items as supplementary material.
 
-\noindent\textbf{Polished genome sequence}: the exact gap-free FASTA file corresponding to the public NCBI assembly.\\
-\textbf{Gene predictions}: a comprehensive \texttt{.gff} file containing coordinates and features for all 6\,907 predicted genes, plus a companion \texttt{.faa} file with the translated amino acid sequences of every coding region, providing a ready resource for downstream studies.\\
-\textbf{Polishing workflow}: the complete pipeline used to generate the final assembly.\\
-\textbf{BUSCO completeness reports}: original outputs for both \textit{genome} and \textit{protein} modes (v5.7.0, \textit{basidiomycota\_odb10} dataset).
+\noindent\textbf{Polished genome sequence}: the exact gap-free FASTA
+file corresponding to the public NCBI assembly.\\
+\textbf{Gene predictions}: a comprehensive \texttt{.gff} file
+containing coordinates and features for all 6\,907 predicted genes,
+plus a companion \texttt{.faa} file with the translated amino acid
+sequences of every coding region, providing a ready resource for
+downstream studies.\\
+\textbf{Polishing workflow}: the complete pipeline used to generate
+the final assembly.\\
+\textbf{BUSCO completeness reports}: original outputs for both
+\textit{genome} and \textit{protein} modes (v5.7.0,
+\textit{basidiomycota\_odb10} dataset).
 
-The \texttt{AssemblyPolish.wdl} workflow is also mirrored on \href{https://github.com/lmtani/s-scitamineum-pipelines}{GitHub}. All other supplementary files accompany this manuscript.
+The \texttt{AssemblyPolish.wdl} workflow is also mirrored on
+\href{https://github.com/lmtani/s-scitamineum-pipelines}{GitHub}. All
+other supplementary files accompany this manuscript.
 
 \section*{Declaration of Interests}
 
@@ -155,17 +322,21 @@ The authors declare that they have no competing interests.
 
 \section*{Funding}
 
-The authors acknowledge the support of the Brazilian institution FAPESP: grant numbers 2022/03962-7 and CNPq 405314/2021-3 and 305961/2017-7 (C.B.M.-V.); fellowships to P.F.V. FAPESP (2023/13474-2).
+The authors acknowledge the support of the Brazilian institution
+FAPESP: grant numbers 2022/03962-7 and CNPq 405314/2021-3 and
+305961/2017-7 (C.B.M.-V.); fellowships to P.F.V. FAPESP (2023/13474-2).
 
-Mendelics Análise Genômica also provided support in the form of a salary for authors L.M.T. and J.P.K.
+Mendelics Análise Genômica also provided support in the form of a
+salary for authors L.M.T. and J.P.K.
 
-These sponsors had no role in study design, data collection and analysis, decision to publish or manuscript preparation.
+These sponsors had no role in study design, data collection and
+analysis, decision to publish or manuscript preparation.
 
 \section*{acknowledgements}
 
-The authors thank Elaine Vidotto Batista for technical support and Marcella Ferreira (Microbe Lab, ESALQ/USP) for participating in DNA extraction.
+The authors thank Elaine Vidotto Batista for technical support and
+Marcella Ferreira (Microbe Lab, ESALQ/USP) for participating in DNA extraction.
 
 \bibliography{ascexmpl-new}
-
 
 \end{document}
