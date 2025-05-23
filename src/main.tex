@@ -39,22 +39,25 @@ Piracicaba, SP, Brazil}
 \begin{abstract}
   In 2015, we published the complete genome assembly of
   \textit{Sporisorium scitamineum}, the fungal pathogen responsible
-  for sugarcane smut disease, generated primarily from PacBio
+  for sugarcane smut disease, generated from PacBio
   long-read sequencing and polished with Illumina short reads. Since
   then, the tools for genome assembly have improved considerably,
   including advances in sequencing technologies and bioinformatics
   workflows, motivating us to revisit our original assembly. Here, we
-  present an updated genome version, re-polished using newly
+  present an updated genome version, using newly
   generated high-quality Illumina short-read data and
-  state-of-the-art variant-calling workflows, resulting in
-  corrections at approximately 5,500 genomic positions, predominantly
-  correcting SNP and indel errors. BUSCO benchmarking in protein mode
-  demonstrated increased genome completeness from the original 94.2\%
+  DeepVariant-based polishing, resulting in
+  corrections at approximately 5,500 genomic positions. BUSCO
+  benchmarking in protein mode demonstrated increased genome
+  completeness from the original 94.2\%
   to 99.3\%, indicating substantial improvements in both accuracy and
-  gene annotation reliability. This enhanced genome assembly provides
-  a significantly improved reference resource, enabling more robust
-  genetic, evolutionary, and functional studies of this economically
-  important sugarcane pathogen.
+  gene annotation reliability. Additionally, comparison with publicly
+  available assemblies reveals that most sequence polymorphisms occur
+  in isolates belonging to the Asian lineage, consistent with earlier
+  population-level studies.
+  This enhanced genome assembly provides a significantly improved
+  reference resource, enabling more robust genetic, evolutionary, and
+  functional studies of this economically important sugarcane pathogen.
 \end{abstract}
 
 \section*{Introduction}
@@ -102,9 +105,12 @@ genome assembly obtained by polishing the original genome with newly
 generated Illumina sequencing data, variant calling, and consensus
 refinement techniques. We also improved gene prediction by utilizing
 the more complete FunGAP pipeline, incorporating existing RNA-seq
-data. The resulting genome resource represents an advancement,
-facilitating more accurate genetic, evolutionary, and functional
-studies of this pathogen.
+data. Comparison of our updated assembly with other available
+\textit{S. scitamineum}'s genomes demonstrated that the Chinese
+assembly \cite{refencegenome} had most of the variation, while South
+African assemblies shared a higher similarity.
+The resulting genome resource represents an advancement, facilitating
+more accurate genetic, evolutionary, and functional studies of this pathogen.
 
 \section*{Methods}
 
@@ -114,7 +120,7 @@ Fungal cells from MAT-1 haploid yeast-like cells derived from SSC39
 teliospores were grown in a liquid medium YM (3 g
   L\textsuperscript{-1} yeast extract, 3 g L\textsuperscript{-1} malt
   extract, 5 g L\textsuperscript{-1} peptone, 10 g
-L\textsuperscript{-1} glucose) at 28~$^{\circ}$C. with shaking at 200
+L\textsuperscript{-1} glucose) at 28~$^{\circ}$C with shaking at 200
 rpm. Genomic DNA was extracted with a modified Doyle and Doyle
 protocol \cite{Doyle1987} to meet sequencing quality standards.
 
@@ -139,8 +145,8 @@ The original reference genome for \textit{S. scitamineum} (NCBI
 accession GCA\_001010845.1) \cite{sscita2015} was retrieved from
 GenBank. Illumina paired-end reads generated in the present study
 were aligned to this assembly with \textsc{bwa-mem} \cite{bwamem}.
-Variants were then called using \textsc{DeepVariant} (default
-parameters) \cite{deepvariant2018}, and the resulting VCF file was
+Variants were then called using \textsc{DeepVariant} (v1.6.0, model
+WGS) \cite{deepvariant2018}, and the resulting VCF file was
 applied to the reference with \textsc{bcftools consensus}
 \cite{samtools} to create a polished FASTA sequence (deposited under
 accession GCA\_001010845.3).
@@ -166,7 +172,8 @@ reference genome using MUMmer v4.0.0-rc1 (\verb|nucmer|, default
 parameters), and filtered to retain only one-to-one matches with
 \verb|delta-filter -1|; the resulting \texttt{*.delta} file was
 converted to VCF with \verb|delta2vcf|, after which two in-place
-edits to corrected the genotype field and pruned superfluous FORMAT sub-fields.
+edits with \verb|sed| command to correct the genotype field and prune
+superfluous FORMAT sub-fields.
 
 % ------------------------------------------------------------------
 \subsection*{Gene Prediction}
@@ -187,7 +194,7 @@ orthologues at the annotation level.
 \subsection*{Sequencing and genome polishing}
 
 Illumina paired--end sequencing generated 1.59 Gbp of data (2~x 300
-bp), corresponding to roughly 80x coverage of the 20Mb genome. Read
+bp), corresponding to roughly 80x coverage of the 20 Mb genome. Read
 quality profiles for R1 and R2 were nearly identical, with an average
 GC content of 53\%, a sharp length distribution (290-300~bp) and
 minimal adaptor or low--quality sequence removal.
@@ -195,31 +202,37 @@ minimal adaptor or low--quality sequence removal.
 Alignment of these reads to the 2015 reference followed by
 \textsc{DeepVariant} calling introduced 5,500 single-nucleotide and
 indel corrections. The resulting polished assembly, GCA\_001010845.3,
-spans 20.07 Mb across 27 contigs and is completely gap-free.
+spanned 20.07 Mb across 27 contigs and was completely gap-free.
 
 \subsection*{Assembly quality compared with public references}
 
 The new assembly presented an \textit{N}\textsubscript{90} of 573 kb,
 the highest among the six assemblies we benchmarked
-(Table\ref{table:assembly}). Genome--mode BUSCO v5.7.0 recovered
-98.8~\% complete orthologues (1,308 of 1,324), surpassing the
+(Table\ref{table:assembly}). Genome-mode BUSCO v5.7.0 recovered
+98.8~\% complete orthologues, surpassing the
 original 2015 build (96.5~\%) and marginally outscoring the
 next--best public assembly (98.7~\%). The absence of gaps ensures
 uninterrupted representation of repeat--rich regions, including the
 mating--type loci that underpin pathogenicity in smut fungi.
 
 \paragraph{Small-variant density.}
-Using the new genome build, GCA\_001010845.3, as the benchmark, we
-observed that the original 2015 assembly (GCA\_001010845.1) still
-contains 25.0 single-nucleotide or short-indel differences per 100 kb
-(Table\ref{table:assembly}), underscoring the magnitude of the
-corrections introduced during polishing.  Among the other public
-assemblies, divergence spans an order of magnitude: the assembly
-GCA\_023212615.1 differs by only 5.0 variants / 100 kb, whereas the
-older draft GCA\_000772675.1 shows the highest discrepancy at 59.5
-variants / 100 kb.  Taken together, these data confirm that
-assemblies generated without rigorous polishing accumulate
-substantially more small errors.
+Using our updated reference genome (GCA\_001010845.3) as the
+baseline, we detected 25 single-nucleotide and small-indel variants
+per 100 kb when the original 2015
+assembly (GCA\_001010845.1) was realigned (Table~\ref{table:assembly}). Even
+assemblies from other geographic origins show fewer differences relative to the
+new reference than did our previous draft, underscoring the extent of the
+corrections introduced during polishing.  Among publicly available genomes, the
+Chinese isolate GCA\_000772675.1 was the most divergent, with median
+of 59.5 variants per
+100 kb. This pattern is consistent with population-level studies indicating
+that American and African isolates derive from a single Asian lineage,
+reflecting a founder effect~\cite{RABOIN200764}. Most other assemblies also
+represent MAT-2 strains, whereas our reference is MAT-1, which may contribute
+to the observed differences. Finally, variation attributable to reference
+choice, alignment parameters, repeat masking, sequencing depth and quality, and
+platform-specific biases should be considered when interpreting absolute
+variant counts~\cite{https://doi.org/10.1002/humu.24311}.
 
 \subsection*{Gene prediction and proteome completeness}
 
@@ -244,10 +257,14 @@ researcher to reproduce the results on local hardware or in the cloud.
 Taken together, these gains in sequence accuracy, contiguity, and
 gene-space completeness position GCA001010845.3 as the most accurate
 and comprehensive reference genome available for \textit{S.
-scitamineum}. This resource will facilitate fine-scale variant
-discovery, allele-specific expression analyses, and high-resolution
-comparative genomics across smut fungi, thereby accelerating both
-basic and applied research on sugarcane smut disease.
+scitamineum} to date. This resource will facilitate fine-scale
+variant discovery, allele-specific expression analyses, and
+high-resolution comparative genomics across smut fungi.
+In addition, this genome-wide variation assessment confirmed
+previous reports of lower genetic diversity among American and
+African isolates compared to Asian lineages. These insights shed
+light on population diversification at genome-level and lay the
+groundwork for future studies focused on understanding pathogen evolution.
 
 \begin{table}
 \caption{Comparative assembly statistics for the new polished genome
@@ -264,7 +281,7 @@ versus five previously published S. scitamineum references}
   \column{\%Gaps} &
   \column{\%GC} &
   \column{N90} &
-  \column{SNV per 100 kb*} &
+  \column{variants/100 kb*} &
   \column{BUSCO**} \\
   \hline
   \textbf{GCA\_001010845.3} & 27  & 20,073,740 & 0.0   & 55.06 &
@@ -280,7 +297,7 @@ versus five previously published S. scitamineum references}
   GCA\_023212615.1          & 371 & 19,567,282 & 0.019 & 55.12 &
   27,065  & 5.0  & 98.6\% \\
   \hline
-  \multicolumn{8}{l}{$\ast$ Median of small variants per 100 kb using
+  \multicolumn{8}{l}{$\ast$ Median of variants per 100 kb using
   GCA\_001010845.3 as reference} \\
   \multicolumn{8}{l}{$\ast$$\ast$ Complete BUSCOs detected in genome mode} \\
   \hline\hline
@@ -294,7 +311,7 @@ The polished \textit{Sporisorium scitamineum} genome generated in
 this study is publicly available in the NCBI Nucleotide database
 under chromosome-level accessions CP010913.2-CP010939.2 (assembly
 accession
-\href{https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_001010845}{\texttt{GCA\_001010845}}).
+\href{https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_001010845}{\texttt{GCA\_001010845.3}}).
 
 To maximize reproducibility and make the new gene predictions
 accessible, we provide the following items as supplementary material.
