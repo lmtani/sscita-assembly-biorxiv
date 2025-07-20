@@ -10,30 +10,27 @@ on:
 jobs:
   build-latex:
     runs-on: ubuntu-latest
+    container:
+      image: texlive/texlive:latest
     
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-      
-    - name: Install LaTeX dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y texlive-latex-base texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra texlive-bibtex-extra texlive-science texlive-publishers
         
     - name: Compile LaTeX document
       working-directory: ./src
       run: |
         echo "Starting LaTeX compilation..."
+        echo "Working directory contents:"
+        ls -la
         
         # First pass
         echo "Running first pdflatex pass..."
         pdflatex -interaction=nonstopmode -file-line-error main.tex
         
-        # Run bibtex if references.bib exists
-        if [ -f "references.bib" ]; then
-          echo "Running bibtex..."
-          bibtex main
-        fi
+        # Always run bibtex since references.bib exists
+        echo "Running bibtex..."
+        bibtex main
         
         # Second pass to resolve references
         echo "Running second pdflatex pass..."
@@ -44,6 +41,20 @@ jobs:
         pdflatex -interaction=nonstopmode -file-line-error main.tex
         
         echo "LaTeX compilation completed."
+        
+    - name: Show logs on compilation error
+      if: failure()
+      working-directory: ./src
+      run: |
+        echo "=== Compilation failed. Showing logs ==="
+        if [ -f "main.log" ]; then
+          echo "=== main.log ==="
+          tail -50 main.log
+        fi
+        if [ -f "main.blg" ]; then
+          echo "=== main.blg ==="
+          cat main.blg
+        fi
         
     - name: Check if PDF was created
       run: |
