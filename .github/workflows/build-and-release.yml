@@ -1,0 +1,108 @@
+name: Build and Release LaTeX Document
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-latex:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Install LaTeX dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y texlive-latex-base texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra texlive-bibtex-extra texlive-science texlive-publishers
+        
+    - name: Compile LaTeX document
+      working-directory: ./src
+      run: |
+        echo "Starting LaTeX compilation..."
+        
+        # First pass
+        echo "Running first pdflatex pass..."
+        pdflatex -interaction=nonstopmode -file-line-error main.tex
+        
+        # Run bibtex if references.bib exists
+        if [ -f "references.bib" ]; then
+          echo "Running bibtex..."
+          bibtex main
+        fi
+        
+        # Second pass to resolve references
+        echo "Running second pdflatex pass..."
+        pdflatex -interaction=nonstopmode -file-line-error main.tex
+        
+        # Third pass to ensure everything is resolved
+        echo "Running third pdflatex pass..."
+        pdflatex -interaction=nonstopmode -file-line-error main.tex
+        
+        echo "LaTeX compilation completed."
+        
+    - name: Check if PDF was created
+      run: |
+        if [ ! -f "src/main.pdf" ]; then
+          echo "Error: PDF was not created"
+          exit 1
+        fi
+        echo "PDF successfully created: $(ls -la src/main.pdf)"
+        
+    - name: Rename PDF with timestamp
+      run: |
+        TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
+        cp src/main.pdf "sscita-assembly-manuscript_${TIMESTAMP}.pdf"
+        
+    - name: Upload PDF artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: latex-pdf-${{ github.sha }}
+        path: |
+          src/main.pdf
+          sscita-assembly-manuscript_*.pdf
+        retention-days: 30
+        
+    - name: Upload compilation logs (on failure)
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: latex-logs-${{ github.sha }}
+        path: |
+          src/*.log
+          src/*.aux
+          src/*.blg
+        retention-days: 7
+
+  release:
+    needs: build-latex
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Download PDF artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: latex-pdf-${{ github.sha }}
+        
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          sscita-assembly-manuscript_*.pdf
+        body: |
+          Automated release of the LaTeX manuscript PDF.
+          
+          This release contains the compiled PDF of the manuscript.
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
