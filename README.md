@@ -2,45 +2,20 @@
 
 This repository contains the LaTeX manuscript for the updated chromosome-level genome assembly of *Sporisorium scitamineum*.
 
-## Automated Building
+## PDF Generation
 
-This repository is configured with GitHub Actions to automatically build the LaTeX document into a PDF whenever changes are pushed to the main branch.
+A PDF of the manuscript is automatically generated:
+- When a pull request is merged
+- When a new release is created
 
-### Workflows
+You can download the latest compiled PDF from the GitHub repository's releases or from the pull request comments.
 
-1. **build-latex.yml**: Basic workflow that compiles the LaTeX document and uploads the PDF as an artifact
-2. **build-and-release.yml**: Enhanced workflow that also creates releases when tags are pushed
+## Citation
 
-### Building Locally
+The current version of this work is published in bioRxiv:
+- [Taniguti et al., 2025. Updated chromosome-level genome assembly of Sporisorium scitamineum with improved accuracy and completeness. bioRxiv.](https://www.biorxiv.org/content/10.1101/2025.05.23.649816v1)
 
-To build the document locally, you need a LaTeX distribution with the following packages:
-- texlive-latex-base
-- texlive-latex-extra
-- texlive-fonts-recommended
-- texlive-fonts-extra
-- texlive-bibtex-extra
-- texlive-science
-- texlive-publishers
+## Analysis Workflows
 
-Then run:
-```bash
-cd src
-pdflatex main.tex
-bibtex main
-pdflatex main.tex
-pdflatex main.tex
-```
-
-### Creating a Release
-
-To create a release with the compiled PDF:
-1. Tag your commit: `git tag v1.0.0`
-2. Push the tag: `git push origin v1.0.0`
-3. The workflow will automatically create a GitHub release with the compiled PDF
-
-### Files
-
-- `src/main.tex`: Main LaTeX document
-- `src/references.bib`: Bibliography file
-- `src/theme.cls`: ASCE journal document class (ascelike-new)
-- `src/theme.bst`: Bibliography style
+All analysis workflows and reproducible pipelines are available at:
+- [lmtani/s-scitamineum-pipelines](https://github.com/lmtani/s-scitamineum-pipelines?tab=readme-ov-file)

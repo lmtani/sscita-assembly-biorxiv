@@ -1,5 +1,11 @@
 name: Build LaTeX Document
 
+# Add permissions for the workflow
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
 on:
   push:
     branches: [ main ]
@@ -108,6 +114,8 @@ jobs:
     needs: build-latex
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
     
     steps:
     - name: Checkout repository
