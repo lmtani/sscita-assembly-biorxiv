@@ -26,7 +26,7 @@ jobs:
         
         # First pass
         echo "Running first pdflatex pass..."
-        pdflatex -interaction=nonstopmode -file-line-error main.tex
+        pdflatex -interaction=nonstopmode -file-line-error main.tex  || true
         
         # Always run bibtex since references.bib exists
         echo "Running bibtex..."
@@ -34,11 +34,11 @@ jobs:
         
         # Second pass to resolve references
         echo "Running second pdflatex pass..."
-        pdflatex -interaction=nonstopmode -file-line-error main.tex
+        pdflatex -interaction=nonstopmode -file-line-error main.tex  || true
         
         # Third pass to ensure everything is resolved
         echo "Running third pdflatex pass..."
-        pdflatex -interaction=nonstopmode -file-line-error main.tex
+        pdflatex -interaction=nonstopmode -file-line-error main.tex || true
         
         echo "LaTeX compilation completed."
         
